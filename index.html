@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The World of Cups</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-color);
+            background-color: var(--light-color);
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.1)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        nav {
+            background-color: var(--dark-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 1rem 0;
+        }
+        
+        nav li {
+            margin: 0 1rem;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+        
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        section {
+            margin-bottom: 3rem;
+        }
+        
+        h1, h2, h3 {
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+        }
+        
+        h2 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        .cup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        
+        .cup-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+        
+        .cup-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .cup-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .cup-content {
+            padding: 1.5rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #27ae60;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+        }
+        
+        .comparison-table th, .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .comparison-table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .comparison-table tr:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+        
+        .chart-container {
+            margin: 2rem 0;
+            height: 300px;
+            position: relative;
+        }
+        
+        .bar {
+            position: absolute;
+            bottom: 0;
+            width: 15%;
+            background-color: var(--primary-color);
+            transition: var(--transition);
+            border-radius: 5px 5px 0 0;
+        }
+        
+        .bar:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .bar-label {
+            position: absolute;
+            bottom: -30px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        .bar-value {
+            position: absolute;
+            top: -25px;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .eco-rating {
+            display: flex;
+            align-items: center;
+            margin: 1rem 0;
+        }
+        
+        .eco-rating-star {
+            color: #f1c40f;
+            font-size: 1.5rem;
+            margin-right: 0.25rem;
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 3rem;
+        }
+        
+        .social-links {
+            margin-top: 1rem;
+        }
+        
+        .social-links a {
+            color: white;
+            margin: 0 0.5rem;
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+        
+        .social-links a:hover {
+            color: var(--primary-color);
+            transform: scale(1.2);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav li {
+                margin: 0.5rem 0;
+            }
+            
+            .cup-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-table {
+                font-size: 0.9rem;
+            }
+            
+            .comparison-table th, .comparison-table td {
+                padding: 0.5rem;
+            }
+            
+            .chart-container {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>The World of Cups</h1>
+        <p>Exploring the variety, functionality, and sustainability of everyday vessels</p>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="#introduction">Introduction</a></li>
+            <li><a href="#types">Cup Types</a></li>
+            <li><a href="#comparison">Comparison</a></li>
+            <li><a href="#sustainability">Sustainability</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+    
+    <main>
+        <section id="introduction">
+            <h2>Introduction to Cups</h2>
+            <p>Cups are essential vessels that have been used by humans for thousands of years. From ancient clay vessels to modern smart mugs, cups have evolved significantly while maintaining their primary purpose: to hold liquids for consumption.</p>
+            <p>Today, cups come in countless materials, shapes, and designs, each serving specific purposes and preferences. This page explores the fascinating world of cups, their types, uses, and environmental impacts.</p>
+            <button class="btn" id="fun-fact-btn">Show Fun Fact</button>
+        </section>
+        
+        <section id="types">
+            <h2>Types of Cups</h2>
+            <div class="cup-grid">
+                <div class="cup-card">
+                    <div class="cup-image" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"300\" height=\"200\" viewBox=\"0 0 300 200\"><rect width=\"300\" height=\"200\" fill=\"%23795548\"/><path d=\"M100,50 L200,50 L220,150 L80,150 Z\" fill=\"%23a1887f\"/><path d=\"M220,70 L240,70 L240,100 L220,100 Z\" fill=\"%23a1887f\"/></svg>');"></div>
+                    <div class="cup-content">
+                        <h3>Coffee Cups</h3>
+                        <p>Coffee cups are designed to hold hot beverages while providing insulation to protect the user's hands. They often feature a handle and come in various sizes for different coffee drinks.</p>
+                        <div class="eco-rating">
+                            <span class="eco-rating-star">★</span>
+                            <span class="eco-rating-star">★</span>
+                            <span class="eco-rating-star">★</span>
+                            <span class="eco-rating-star">☆</span>
+                            <span class="eco-rating-star">☆</span>
+                        </div>
+                        <a href="#" class="btn cup-details-btn" data-cup="coffee">Learn More</a>
+                    </div>
+                </div>
+                
+                <div class="cup-card">
+                    <div class="cup-image" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"300\" height=\"200\" viewBox=\"0 0 300 200\"><rect width=\"300\" height=\"200\" fill=\"%23bbdefb\"/><path d=\"M100,40 L200,40 L190,160 L110,160 Z\" fill=\"%2390caf9\"/></svg>');"></div>
+                    <div class="cup-content">
+                        <h3>Plastic Cups</h3>
+                        <p>Plastic cups are lightweight, durable, and often disposable. They're commonly used at parties, picnics, and other casual gatherings where convenience is prioritized.</p>
+                        <div class="eco-rating">
+                            <span class="eco-rating-star">★</span>
+                            <span class="eco-rating-star">☆</span>
+                            <span class="eco-rating-star">☆</span>
+                            <span class="eco-rating-star">☆</span>
+                            <span class="eco-rating-star">☆</span>
+                        </div>
+                        <a href="#" class="btn cup-details-btn" data-cup="plastic">Learn More</a>
+                    </div>
+                </div>
+                
+                <div class="cup-card">
+                    <div class="cup-image" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"300\" height=\"200\" viewBox=\"0 0 300 200\"><rect width=\"300\" height=\"200\" fill=\"%23e0e0e0\"/><path d=\"M100,40 L200,40 L180,160 L120,160 Z\" fill=\"%23f5f5f5\"/><path d=\"M100,40 L200,40 L180,160 L120,160 Z\" stroke=\"%23bdbdbd\" stroke-width=\"2\" fill=\"none\"/></svg>');"></div>
+                    <div class="cup-content">
+                        <h3>Paper Cups</h3>
+                        <p>Paper cups are disposable vessels made from paper with a thin plastic or wax coating. They're commonly used for hot and cold beverages in cafes, fast-food restaurants, and water coolers.</p>
+                        <div class="eco-rating">
+                            <span class="eco-rating-star">★</span>
+                            <span class="eco-rating-star">★</span>
+                            <span class="eco-rating-star">☆</span>
+                            <span class="eco-rating-star">☆</span>
+                            <span class="eco-rating-star">☆</span>
+                        </div>
+                        <a href="#" class="btn cup-details-btn" data-cup="paper">Learn More</a>
+                    </div>
+                </div>
+                
+                <div class="cup-card">
+                    <div class="cup-image" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"300\" height=\"200\" viewBox=\"0 0 300 200\"><rect width=\"300\" height=\"200\" fill=\"%23e8f5e9\"/><path d=\"M100,40 L200,40 L190,160 L110,160 Z\" fill=\"%23c8e6c9\"/><path d=\"M100,40 L200,40 L190,160 L110,160 Z\" stroke=\"%2381c784\" stroke-width=\"2\" fill=\"none\"/></svg>');"></div>
+                    <div class="cup-content">
+                        <h3>Reusable Cups</h3>
+                        <p>Reusable cups are designed for long-term use and come in materials like stainless steel, glass, ceramic, and BPA-free plastics. They're an eco-friendly alternative to disposable options.</p>
+                        <div class="eco-rating">
+                            <span class="eco-rating-star">★</span>
+                            <span class="eco-rating-star">★</span>
+                            <span class="eco-rating-star">★</span>
+                            <span class="eco-rating-star">★</span>
+                            <span class="eco-rating-star">★</span>
+                        </div>
+                        <a href="#" class="btn cup-details-btn" data-cup="reusable">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="comparison">
+            <h2>Cup Comparison</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Cup Type</th>
+                        <th>Durability</th>
+                        <th>Insulation</th>
+                        <th>Cost</th>
+                        <th>Eco-Friendliness</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Ceramic Coffee Cups</td>
+                        <td>High</td>
+                        <td>Medium</td>
+                        <td>Medium</td>
+                        <td>High</td>
+                    </tr>
+                    <tr>
+                        <td>Disposable Plastic Cups</td>
+                        <td>Low</td>
+                        <td>Low</td>
+                        <td>Low</td>
+                        <td>Very Low</td>
+                    </tr>
+                    <tr>
+                        <td>Paper Cups</td>
+                        <td>Low</td>
+                        <td>Low-Medium</td>
+                        <td>Low</td>
+                        <td>Low</td>
+                    </tr>
+                    <tr>
+                        <td>Stainless Steel Tumblers</td>
+                        <td>Very High</td>
+                        <td>High</td>
+                        <td>High</td>
+                        <td>Very High</td>
+                    </tr>
+                    <tr>
+                        <td>Glass Cups</td>
+                        <td>Medium</td>
+                        <td>Low</td>
+                        <td>Medium</td>
+                        <td>High</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Environmental Impact</h3>
+            <div class="chart-container">
+                <div class="bar" style="left: 10%; height: 80%;">
+                    <div class="bar-value">80%</div>
+                    <div class="bar-label">Plastic</div>
+                </div>
+                <div class="bar" style="left: 30%; height: 60%;">
+                    <div class="bar-value">60%</div>
+                    <div class="bar-label">Paper</div>
+                </div>
+                <div class="bar" style="left: 50%; height: 30%;">
+                    <div class="bar-value">30%</div>
+                    <div class="bar-label">Ceramic</div>
+                </div>
+                <div class="bar" style="left: 70%; height: 20%;">
+                    <div class="bar-value">20%</div>
+                    <div class="bar-label">Glass</div>
+                </div>
+            </div>
+            <p>The chart above shows the relative environmental impact of different cup materials, with higher percentages indicating greater negative impact.</p>
+        </section>
+        
+        <section id="sustainability">
+            <h2>Sustainability Considerations</h2>
+            <p>As environmental concerns grow, the choice of cups has become an important sustainability decision for both individuals and businesses. Here are some considerations:</p>
+            <ul>
+                <li>Single-use plastic cups can take hundreds of years to decompose</li>
+                <li>Paper cups often contain plastic linings that make them difficult to recycle</li>
+                <li>Reusable cups need to be used multiple times to offset their production impact</li>
+                <li>Some materials require more energy to produce but last much longer</li>
+            </ul>
+            <button class="btn btn-secondary" id="sustainability-tips-btn">Show Sustainability Tips</button>
+        </section>
+        
+        <section id="contact">
+            <h2>Contact Us</h2>
+            <p>Have questions about cups or want to share your favorite cup? Get in touch with us!</p>
+            <form id="contact-form">
+                <div style="margin-bottom: 1rem;">
+                    <label for="name" style="display: block; margin-bottom: 0.5rem;">Name:</label>
+                    <input type="text" id="name" name="name" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label for="email" style="display: block; margin-bottom: 0.5rem;">Email:</label>
+                    <input type="email" id="email" name="email" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label for="message" style="display: block; margin-bottom: 0.5rem;">Message:</label>
+                    <textarea id="message" name="message" rows="4" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;"></textarea>
+                </div>
+                <button type="submit" class="btn">Send Message</button>
+            </form>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; 2023 The World of Cups. All rights reserved.</p>
+        <div class="social-links">
+            <a href="#" aria-label="Facebook">📱</a>
+            <a href="#" aria-label="Twitter">🐦</a>
+            <a href="#" aria-label="Instagram">📷</a>
+            <a href="#" aria-label="Pinterest">📌</a>
+        </div>
+    </footer>
+    
+    <div class="modal" id="cup-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 id="modal-title">Cup Details</h3>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Modal functionality
+        const modal = document.getElementById('cup-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalContent = document.getElementById('modal-content');
+        const closeModal = document.querySelector('.close-modal');
+        
+        // Cup details buttons
+        const cupDetailsBtns = document.querySelectorAll('.cup-details-btn');
+        
+        // Cup details data
+        const cupDetails = {
+            coffee: {
+                title: "Coffee Cups",
+                content: `
+                    <p>Coffee cups come in various forms, from ceramic mugs to paper to-go cups. They typically hold between 8-16 oz of liquid and are designed to maintain temperature.</p>
+                    <h4>Common Materials:</h4>
+                    <ul>
+                        <li>Ceramic - Durable and reusable</li>
+                        <li>Paper with plastic lining - Disposable</li>
+                        <li>Stainless steel - Reusable and insulated</li>
+                    </ul>
+                    <p>The first coffee houses in Europe appeared in the 17th century, popularizing dedicated coffee cups.</p>
+                `
+            },
+            plastic: {
+                title: "Plastic Cups",
+                content: `
+                    <p>Plastic cups are lightweight, inexpensive, and commonly used for cold beverages at parties and events.</p>
+                    <h4>Common Types:</h4>
+                    <ul>
+                        <li>Solo cups - Iconic red party cups</li>
+                        <li>Clear plastic cups - Often used for iced drinks</li>
+                        <li>Plastic tumblers - Reusable option</li>
+                    </ul>
+                    <p>While convenient, single-use plastic cups contribute significantly to plastic pollution. Consider biodegradable alternatives or reusable options.</p>
+                `
+            },
+            paper: {
+                title: "Paper Cups",
+                content: `
+                    <p>Paper cups are disposable containers made primarily from paper with a thin plastic or wax coating to prevent leakage.</p>
+                    <h4>Common Uses:</h4>
+                    <ul>
+                        <li>Coffee shops for to-go orders</li>
+                        <li>Water coolers in offices</li>
+                        <li>Fast food restaurants</li>
+                    </ul>
+                    <p>Despite being paper-based, most paper cups are difficult to recycle due to their plastic lining. Compostable options are becoming more widely available.</p>
+                `
+            },
+            reusable: {
+                title: "Reusable Cups",
+                content: `
+                    <p>Reusable cups are designed for long-term use, reducing waste and often providing better drinking experiences.</p>
+                    <h4>Popular Materials:</h4>
+                    <ul>
+                        <li>Stainless steel - Durable and often insulated</li>
+                        <li>Glass - Pure taste and recyclable</li>
+                        <li>Silicone - Flexible and collapsible options</li>
+                        <li>Ceramic - Traditional and aesthetically pleasing</li>
+                    </ul>
+                    <p>A reusable cup typically needs to be used 20-100 times (depending on material) to offset its environmental production impact compared to disposable alternatives.</p>
+                `
+            }
+        };
+        
+        // Open modal with cup details
+        cupDetailsBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const cupType = btn.getAttribute('data-cup');
+                const details = cupDetails[cupType];
+                
+                modalTitle.textContent = details.title;
+                modalContent.innerHTML = details.content;
+                modal.style.display = 'flex';
+            });
+        });
+        
+        // Close modal
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+        
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+        
+        // Fun fact button
+        document.getElementById('fun-fact-btn').addEventListener('click', () => {
+            const funFacts = [
+                "The world's largest cup collection contains over 15,000 unique cups!",
+                "The first paper cup was invented in 1907 to help prevent the spread of germs.",
+                "Ancient Greek cups called 'kylixes' had shallow bowls and were designed for drinking games.",
+                "The average office worker uses about 500 disposable cups per year.",
+                "The term 'cup of joe' for coffee originated from American sailors in the early 20th century."
+            ];
+            
+            const randomFact = funFacts[Math.floor(Math.random() * funFacts.length)];
+            alert(`Fun Cup Fact: ${randomFact}`);
+        });
+        
+        // Sustainability tips button
+        document.getElementById('sustainability-tips-btn').addEventListener('click', () => {
+            alert("Sustainability Tips:
+
+1. Bring your own reusable cup to coffee shops
+2. Choose cups made from recycled materials
+3. Avoid single-use plastic cups whenever possible
+4. Consider the full lifecycle of your cup choices
+5. Properly recycle or compost cups when appropriate");
+        });
+        
+        // Form submission
+        document.getElementById('contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            if (name && email && message) {
+                alert(`Thank you, ${name}! Your message has been received. We'll respond to ${email} soon.`);
+                document.getElementById('contact-form').reset();
+            } else {
+                alert("Please fill out all fields before submitting.");
+            }
+        });
+        
+        // Animate bars on scroll
+        function animateBars() {
+            const bars = document.querySelectorAll('.bar');
+            bars.forEach(bar => {
+                const originalHeight = bar.style.height;
+                bar.style.height = '0%';
+                setTimeout(() => {
+                    bar.style.height = originalHeight;
+                }, 300);
+            });
+        }
+        
+        // Run animation when chart is in view
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateBars();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        observer.observe(document.querySelector('.chart-container'));
+    </script>
+</body>
+</html>
