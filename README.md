@@ -13,3 +13,6 @@ To access the "about-cups" project, simply open the index.html file using your p
 
 File Structure:
 - index.html: This is the primary web page of the project, containing all the relevant content about cups.
+
+Requirements:
+- 本地需 Python 3.11
